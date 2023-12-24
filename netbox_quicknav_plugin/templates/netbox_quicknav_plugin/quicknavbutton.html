@@ -1,0 +1,42 @@
+{% extends 'generic/object.html' %}
+
+{% block content %}
+<div class="row mb-3">
+  <div class="col col-md-6">
+    <div class="card">
+      <h5 class="card-header">Quicknav Button</h5>
+      <div class="card-body">
+        <table class="table table-hover attr-table">
+          <tr>
+            <th scope="row">Title</th>
+            <td>{{ object.title }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Order</th>
+            <td>{{ object.order }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Style</th>
+            <td>{{ object.style }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Icon</th>
+            <td>{{ object.icon }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Divider</th>
+            <td>{{ object.divider }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Link</th>
+            <td>{{ object.link }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col col-md-6">
+    {% include 'inc/panels/custom_fields.html' %}
+  </div>
+</div>
+{% endblock content %}

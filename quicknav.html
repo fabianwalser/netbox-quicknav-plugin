@@ -1,0 +1,192 @@
+{% if request.user.is_authenticated %}
+<style>
+	.quicknav-container {
+		padding: 2px 3px;
+		display: flex;
+		flex-direction: row;
+		gap: 6px;
+	}
+
+	.quicknav-container .btn {
+		padding: 0 5px;
+		min-width: 36px;
+		height: 35px;
+		display: flex;
+		flex-direction: row;
+		gap: 0.2rem;
+	}
+
+	.quicknav-container .btn div {
+		margin: 4px 0;
+		padding-right: 3px;
+	}
+
+	.quicknav-container .btn i {
+		margin-top: -2px;
+		font-size: 1.5rem;
+	}
+
+	.quicknav-container .quicknav-divider {
+		margin: 0 5px;
+		width: 2px;
+		height: 35px;
+		background-color: #D0D8E1;
+	}
+
+</style>
+
+
+<div id="quicknav-root" class="quicknav-container">
+
+</div>
+
+
+<script>
+
+	const debug = false;
+
+
+	// ----------------------------------------------------------------------------------------
+	// initQuicknav
+	async function initQuicknav() {
+		const storageKey = 'netbox-quicknav-plugin';
+
+		let cacheUpdated = null;
+		let cached = localStorage.getItem(storageKey);
+
+		if (cached != null) {
+			if (debug) console.log('Render QuickNav from cache');
+			cached = JSON.parse(cached);
+			cacheUpdated = renderQuicknav(cached);
+		}
+
+		let lastUpdated = null;
+		const latest = await fetchSortedElements();
+
+		for (let i = 0; i < latest.length; i++) {
+			lastUpdated = getMostRecent(lastUpdated, latest[i]);
+		}
+
+		if (cacheUpdated !== lastUpdated || cached?.length !== latest.length) {
+			if (debug) console.log('Update and render QuickNav from API');
+			localStorage.setItem(storageKey, JSON.stringify(latest));
+			renderQuicknav(latest);
+		}
+
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// renderQuicknav
+	function renderQuicknav(quicknavButtons) {
+		const quicknavRoot = document.getElementById('quicknav-root');
+		removeAllChildNodes(quicknavRoot);
+
+		let lastUpdated = null;
+
+		for (let i = 0; i < quicknavButtons.length; i++) {
+			const item = quicknavButtons[i];
+
+			lastUpdated = getMostRecent(lastUpdated, item);
+
+			const btn = document.createElement("a");
+			btn.className = 'btn btn-outline-primary';
+			btn.title = item.title;
+			btn.href = item.link;
+
+			switch (item.style) {
+				case 'icon':
+					btn.appendChild(createIconNode(item.icon));
+					break;
+				case 'text':
+					btn.appendChild(createTextNode(item.title));
+					break;
+				case 'both':
+					btn.appendChild(createIconNode(item.icon));
+					btn.appendChild(createTextNode(item.title));
+					break;
+			}
+
+			quicknavRoot.appendChild(btn);
+			if (item.divider) quicknavRoot.appendChild(createDivider());
+		}
+
+		return lastUpdated;
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// removeAllChildNodes
+	function removeAllChildNodes(parent) {
+		while (parent.firstChild) {
+			parent.removeChild(parent.firstChild);
+		}
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// getMostRecent
+	function getMostRecent(lastUpdated, item) {
+		let itemUpdated = new Date(item['last_updated']).getTime();
+		if (lastUpdated == null || itemUpdated > lastUpdated) {
+			return itemUpdated;
+		}
+		return lastUpdated;
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// fetchSortedElements
+	async function fetchSortedElements() {
+		let result = [];
+		let nextPage = '/api/plugins/quicknav/quicknav-buttons/?limit=100';
+
+		while (nextPage !== null) {
+			const response = await fetch(nextPage);
+			const parsed = await response.json();
+
+			nextPage = parsed.next;
+			result.push(...parsed.results);
+		}
+
+		return result.sort((a, b) => a.order - b.order);
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// createIconNode
+	function createIconNode(icon) {
+		const iconNode = document.createElement("i");
+		iconNode.className = icon ?? 'mdi mdi-help';
+		return iconNode;
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// createTextNode
+	function createTextNode(text) {
+		const textWrapper = document.createElement("div");
+		textWrapper.className = 'button-text';
+		textWrapper.appendChild(document.createTextNode(text));
+		return textWrapper;
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// createDivider
+	function createDivider() {
+		const divider = document.createElement("div");
+		divider.className = 'quicknav-divider';
+		return divider;
+	}
+
+
+	// ----------------------------------------------------------------------------------------
+	// DOMContentLoaded
+	document.addEventListener("DOMContentLoaded", () => {
+		initQuicknav();
+	});
+
+</script>
+
+{% endif %}

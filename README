@@ -1,0 +1,57 @@
+## netbox-quicknav-plugin
+
+Quicknav Plugin for NetBox
+
+
+## ----------------------------------------------------------------------------------------------
+
+# Install without Docker:
+add "https://github.com/fabianwalser/netbox-quicknav-plugin.git" to ""/opt/netbox/local_requirements.txt"
+run "sudo /opt/netbox/upgrade.sh"
+
+# Create and run Migrations:
+activate venv: "source /opt/netbox/venv/bin/activate"
+run "./manage.py makemigrations netbox_quicknav_plugin"
+run "./manage.py migrate"
+
+
+## ----------------------------------------------------------------------------------------------
+
+*** To implement the Quicknav in the layout, you have to: ***
+*** Replace "Desktop Navigation" in /opt/netbox/netbox/templates/base/layout.html with this block: ***
+
+<!--- /// --->
+
+  {# Desktop Navigation #}
+  <div class="row search-container">
+
+    {# Empty spacer column to ensure search is centered. #}
+    <div class="col-7 d-flex flex-grow-1 ps-0">
+      {% include 'inc/quicknav.html' %}
+    </div>
+
+    {# Search bar #}
+    <div class="col-3 d-flex flex-grow-1 justify-content-center">
+      {% include 'inc/searchbar.html' %}
+    </div>
+
+    {# Proflie/login button #}
+    <div class="col-2 d-flex flex-grow-1 pe-0 justify-content-end">
+      {% include 'inc/profile_button.html' %}
+    </div>
+
+  </div>
+
+<!--- /// --->
+
+
+*** And copy "quicknav.html" to /opt/netbox/netbox/templates/base/quicknav.html ***
+
+
+## ----------------------------------------------------------------------------------------------
+
+# Tutorial:
+# https://github.com/netbox-community/netbox-plugin-tutorial/blob/main/tutorial/step01-initial-setup.md
+
+# Development with Docker:
+# https://github.com/netbox-community/netbox-docker/discussions/746
