@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='netbox-quicknav-plugin',
-    version='1.1',
+    version='1.1.1',
     description='Quicknav Plugin for NetBox',
     install_requires=[],
     packages=find_packages(),

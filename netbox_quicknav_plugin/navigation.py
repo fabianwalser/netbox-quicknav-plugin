@@ -23,7 +23,7 @@ settings_menu = (
     PluginMenuItem(
         link='plugins:netbox_quicknav_plugin:quicknavbutton_list',
         link_text='Buttons',
-        permissions=["netbox_quicknav_plugin.settings"],
+        permissions=["netbox_quicknav_plugin.view_quicknavbutton"],
         buttons=quicknavbutton_buttons,
     ),
 )
