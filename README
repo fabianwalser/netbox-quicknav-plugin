@@ -45,7 +45,7 @@ run "./manage.py migrate"
 <!--- /// --->
 
 
-*** And copy "quicknav.html" to /opt/netbox/netbox/templates/base/quicknav.html ***
+*** And copy "quicknav.html" to /opt/netbox/netbox/templates/inc/quicknav.html ***
 
 
 ## ----------------------------------------------------------------------------------------------
