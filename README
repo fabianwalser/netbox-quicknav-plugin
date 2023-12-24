@@ -14,6 +14,8 @@ activate venv: "source /opt/netbox/venv/bin/activate"
 run "./manage.py makemigrations netbox_quicknav_plugin"
 run "./manage.py migrate"
 
+# Copy plugin template files to:
+/opt/netbox/netbox/templates/netbox_quicknav_plugin/
 
 ## ----------------------------------------------------------------------------------------------
 
