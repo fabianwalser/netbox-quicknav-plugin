@@ -10,18 +10,21 @@ except ImportError:
     HAVE_MENU = False
     PluginMenu = PluginMenuItem
 
+quicknavbutton_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_quicknav_plugin:quicknavbutton_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
 settings_menu = (
     PluginMenuItem(
         link='plugins:netbox_quicknav_plugin:quicknavbutton_list',
         link_text='Buttons',
-        buttons=[
-            PluginMenuButton(
-                link='plugins:netbox_quicknav_plugin:quicknavbutton_add',
-                title='Add',
-                icon_class='mdi mdi-plus-thick',
-                color=ButtonColorChoices.GREEN
-            )
-        ]
+        permissions=["netbox_quicknav_plugin.settings"],
+        buttons=quicknavbutton_buttons,
     ),
 )
 
