@@ -6,7 +6,7 @@ Quicknav Plugin for NetBox
 ## ----------------------------------------------------------------------------------------------
 
 # Install without Docker:
-add "https://github.com/fabianwalser/netbox-quicknav-plugin.git" to ""/opt/netbox/local_requirements.txt"
+add "git+https://github.com/fabianwalser/netbox-quicknav-plugin.git" to ""/opt/netbox/local_requirements.txt"
 run "sudo /opt/netbox/upgrade.sh"
 
 # Create and run Migrations:
